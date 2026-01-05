@@ -111,9 +111,17 @@ const rgbToHex = (rgb) => {
 
 const PropertiesPanel = ({ isOpen, selectedElement, onStyleChange, onAttributeChange }) => {
   const [styles, setStyles] = useState({});
-  const [expandedGroups, setExpandedGroups] = useState({ Layout: true, Spacing: true, Background: true, Border: true, Link: true });
+  const [expandedGroups, setExpandedGroups] = useState({ 
+    Layout: true, Spacing: true, Background: true, Border: true, 
+    Link: true, Image: true, Table: true, Cell: true, Button: true, Video: true 
+  });
   const [elementTag, setElementTag] = useState('');
   const [linkAttributes, setLinkAttributes] = useState({ href: '', target: '' });
+  const [imageAttributes, setImageAttributes] = useState({ src: '', alt: '' });
+  const [tableAttributes, setTableAttributes] = useState({ cellpadding: '', cellspacing: '', border: '', width: '', align: '' });
+  const [cellAttributes, setCellAttributes] = useState({ colspan: '', rowspan: '', valign: '', align: '', bgcolor: '' });
+  const [buttonAttributes, setButtonAttributes] = useState({ type: '' });
+  const [videoAttributes, setVideoAttributes] = useState({ src: '', poster: '' });
   
   const elementRef = useRef(null);
 
@@ -129,6 +137,51 @@ const PropertiesPanel = ({ isOpen, selectedElement, onStyleChange, onAttributeCh
         setLinkAttributes({
           href: selectedElement.getAttribute('href') || '',
           target: selectedElement.getAttribute('target') || ''
+        });
+      }
+
+      // Handle Image Attributes
+      if (tag === 'img') {
+        setImageAttributes({
+          src: selectedElement.getAttribute('src') || '',
+          alt: selectedElement.getAttribute('alt') || ''
+        });
+      }
+
+      // Handle Table Attributes
+      if (tag === 'table') {
+        setTableAttributes({
+          cellpadding: selectedElement.getAttribute('cellpadding') || '',
+          cellspacing: selectedElement.getAttribute('cellspacing') || '',
+          border: selectedElement.getAttribute('border') || '',
+          width: selectedElement.getAttribute('width') || '',
+          align: selectedElement.getAttribute('align') || ''
+        });
+      }
+
+      // Handle Cell Attributes (td/th)
+      if (tag === 'td' || tag === 'th') {
+        setCellAttributes({
+          colspan: selectedElement.getAttribute('colspan') || '',
+          rowspan: selectedElement.getAttribute('rowspan') || '',
+          valign: selectedElement.getAttribute('valign') || '',
+          align: selectedElement.getAttribute('align') || '',
+          bgcolor: selectedElement.getAttribute('bgcolor') || ''
+        });
+      }
+
+      // Handle Button Attributes
+      if (tag === 'button') {
+        setButtonAttributes({
+          type: selectedElement.getAttribute('type') || ''
+        });
+      }
+
+      // Handle Video Attributes
+      if (tag === 'video') {
+        setVideoAttributes({
+          src: selectedElement.getAttribute('src') || '',
+          poster: selectedElement.getAttribute('poster') || ''
         });
       }
 
@@ -175,6 +228,11 @@ const PropertiesPanel = ({ isOpen, selectedElement, onStyleChange, onAttributeCh
       setStyles({});
       setElementTag('');
       setLinkAttributes({ href: '', target: '' });
+      setImageAttributes({ src: '', alt: '' });
+      setTableAttributes({ cellpadding: '', cellspacing: '', border: '', width: '', align: '' });
+      setCellAttributes({ colspan: '', rowspan: '', valign: '', align: '', bgcolor: '' });
+      setButtonAttributes({ type: '' });
+      setVideoAttributes({ src: '', poster: '' });
     }
   }, [selectedElement]);
 
@@ -198,6 +256,66 @@ const PropertiesPanel = ({ isOpen, selectedElement, onStyleChange, onAttributeCh
 
   const handleLinkChange = useCallback((property, value) => {
     setLinkAttributes(prev => {
+      const newAttrs = { ...prev, [property]: value };
+      
+      if (elementRef.current && onAttributeChange) {
+        onAttributeChange(property, value);
+      }
+      
+      return newAttrs;
+    });
+  }, [onAttributeChange]);
+
+  const handleImageChange = useCallback((property, value) => {
+    setImageAttributes(prev => {
+      const newAttrs = { ...prev, [property]: value };
+      
+      if (elementRef.current && onAttributeChange) {
+        onAttributeChange(property, value);
+      }
+      
+      return newAttrs;
+    });
+  }, [onAttributeChange]);
+
+  const handleTableChange = useCallback((property, value) => {
+    setTableAttributes(prev => {
+      const newAttrs = { ...prev, [property]: value };
+      
+      if (elementRef.current && onAttributeChange) {
+        onAttributeChange(property, value);
+      }
+      
+      return newAttrs;
+    });
+  }, [onAttributeChange]);
+
+  const handleCellChange = useCallback((property, value) => {
+    setCellAttributes(prev => {
+      const newAttrs = { ...prev, [property]: value };
+      
+      if (elementRef.current && onAttributeChange) {
+        onAttributeChange(property, value);
+      }
+      
+      return newAttrs;
+    });
+  }, [onAttributeChange]);
+
+  const handleButtonChange = useCallback((property, value) => {
+    setButtonAttributes(prev => {
+      const newAttrs = { ...prev, [property]: value };
+      
+      if (elementRef.current && onAttributeChange) {
+        onAttributeChange(property, value);
+      }
+      
+      return newAttrs;
+    });
+  }, [onAttributeChange]);
+
+  const handleVideoChange = useCallback((property, value) => {
+    setVideoAttributes(prev => {
       const newAttrs = { ...prev, [property]: value };
       
       if (elementRef.current && onAttributeChange) {
@@ -288,6 +406,324 @@ const PropertiesPanel = ({ isOpen, selectedElement, onStyleChange, onAttributeCh
                         checked={linkAttributes.target === '_blank'}
                         onChange={(e) => handleLinkChange('target', e.target.checked ? '_blank' : '')}
                         style={{ width: '16px', height: '16px' }}
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Image Settings Group */}
+            {elementTag === 'img' && (
+              <div className="properties-group">
+                <button 
+                  className="properties-group-header"
+                  onClick={() => toggleGroup('Image')}
+                  type="button"
+                >
+                  <span>Image Settings</span>
+                  <svg 
+                    viewBox="0 0 24 24" 
+                    width="14" 
+                    height="14" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    strokeWidth="2"
+                    style={{ transform: expandedGroups['Image'] ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}
+                  >
+                    <polyline points="6 9 12 15 18 9"/>
+                  </svg>
+                </button>
+                
+                {expandedGroups['Image'] && (
+                  <div className="properties-group-content">
+                    <div className="property-row">
+                      <label className="property-label">Image URL</label>
+                      <input
+                        type="text"
+                        className="property-input"
+                        value={imageAttributes.src}
+                        onChange={(e) => handleImageChange('src', e.target.value)}
+                        onKeyDown={handleKeyDown}
+                        placeholder="https://example.com/image.jpg"
+                      />
+                    </div>
+                    <div className="property-row">
+                      <label className="property-label">Alt Text</label>
+                      <input
+                        type="text"
+                        className="property-input"
+                        value={imageAttributes.alt}
+                        onChange={(e) => handleImageChange('alt', e.target.value)}
+                        onKeyDown={handleKeyDown}
+                        placeholder="Image description"
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Table Settings Group */}
+            {elementTag === 'table' && (
+              <div className="properties-group">
+                <button 
+                  className="properties-group-header"
+                  onClick={() => toggleGroup('Table')}
+                  type="button"
+                >
+                  <span>Table Settings</span>
+                  <svg 
+                    viewBox="0 0 24 24" 
+                    width="14" 
+                    height="14" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    strokeWidth="2"
+                    style={{ transform: expandedGroups['Table'] ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}
+                  >
+                    <polyline points="6 9 12 15 18 9"/>
+                  </svg>
+                </button>
+                
+                {expandedGroups['Table'] && (
+                  <div className="properties-group-content">
+                    <div className="property-row">
+                      <label className="property-label">Cell Padding</label>
+                      <input
+                        type="text"
+                        className="property-input"
+                        value={tableAttributes.cellpadding}
+                        onChange={(e) => handleTableChange('cellpadding', e.target.value)}
+                        onKeyDown={handleKeyDown}
+                        placeholder="0"
+                      />
+                    </div>
+                    <div className="property-row">
+                      <label className="property-label">Cell Spacing</label>
+                      <input
+                        type="text"
+                        className="property-input"
+                        value={tableAttributes.cellspacing}
+                        onChange={(e) => handleTableChange('cellspacing', e.target.value)}
+                        onKeyDown={handleKeyDown}
+                        placeholder="0"
+                      />
+                    </div>
+                    <div className="property-row">
+                      <label className="property-label">Border</label>
+                      <input
+                        type="text"
+                        className="property-input"
+                        value={tableAttributes.border}
+                        onChange={(e) => handleTableChange('border', e.target.value)}
+                        onKeyDown={handleKeyDown}
+                        placeholder="0"
+                      />
+                    </div>
+                    <div className="property-row">
+                      <label className="property-label">Width</label>
+                      <input
+                        type="text"
+                        className="property-input"
+                        value={tableAttributes.width}
+                        onChange={(e) => handleTableChange('width', e.target.value)}
+                        onKeyDown={handleKeyDown}
+                        placeholder="100%"
+                      />
+                    </div>
+                    <div className="property-row">
+                      <label className="property-label">Align</label>
+                      <select
+                        className="property-select"
+                        value={tableAttributes.align}
+                        onChange={(e) => handleTableChange('align', e.target.value)}
+                      >
+                        <option value="">—</option>
+                        <option value="left">left</option>
+                        <option value="center">center</option>
+                        <option value="right">right</option>
+                      </select>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Cell Settings Group (td/th) */}
+            {(elementTag === 'td' || elementTag === 'th') && (
+              <div className="properties-group">
+                <button 
+                  className="properties-group-header"
+                  onClick={() => toggleGroup('Cell')}
+                  type="button"
+                >
+                  <span>Cell Settings</span>
+                  <svg 
+                    viewBox="0 0 24 24" 
+                    width="14" 
+                    height="14" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    strokeWidth="2"
+                    style={{ transform: expandedGroups['Cell'] ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}
+                  >
+                    <polyline points="6 9 12 15 18 9"/>
+                  </svg>
+                </button>
+                
+                {expandedGroups['Cell'] && (
+                  <div className="properties-group-content">
+                    <div className="property-row">
+                      <label className="property-label">Colspan</label>
+                      <input
+                        type="text"
+                        className="property-input"
+                        value={cellAttributes.colspan}
+                        onChange={(e) => handleCellChange('colspan', e.target.value)}
+                        onKeyDown={handleKeyDown}
+                        placeholder="1"
+                      />
+                    </div>
+                    <div className="property-row">
+                      <label className="property-label">Rowspan</label>
+                      <input
+                        type="text"
+                        className="property-input"
+                        value={cellAttributes.rowspan}
+                        onChange={(e) => handleCellChange('rowspan', e.target.value)}
+                        onKeyDown={handleKeyDown}
+                        placeholder="1"
+                      />
+                    </div>
+                    <div className="property-row">
+                      <label className="property-label">V Align</label>
+                      <select
+                        className="property-select"
+                        value={cellAttributes.valign}
+                        onChange={(e) => handleCellChange('valign', e.target.value)}
+                      >
+                        <option value="">—</option>
+                        <option value="top">top</option>
+                        <option value="middle">middle</option>
+                        <option value="bottom">bottom</option>
+                      </select>
+                    </div>
+                    <div className="property-row">
+                      <label className="property-label">Align</label>
+                      <select
+                        className="property-select"
+                        value={cellAttributes.align}
+                        onChange={(e) => handleCellChange('align', e.target.value)}
+                      >
+                        <option value="">—</option>
+                        <option value="left">left</option>
+                        <option value="center">center</option>
+                        <option value="right">right</option>
+                      </select>
+                    </div>
+                    <div className="property-row">
+                      <label className="property-label">BG Color</label>
+                      <input
+                        type="text"
+                        className="property-input"
+                        value={cellAttributes.bgcolor}
+                        onChange={(e) => handleCellChange('bgcolor', e.target.value)}
+                        onKeyDown={handleKeyDown}
+                        placeholder="#ffffff"
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Button Settings Group */}
+            {elementTag === 'button' && (
+              <div className="properties-group">
+                <button 
+                  className="properties-group-header"
+                  onClick={() => toggleGroup('Button')}
+                  type="button"
+                >
+                  <span>Button Settings</span>
+                  <svg 
+                    viewBox="0 0 24 24" 
+                    width="14" 
+                    height="14" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    strokeWidth="2"
+                    style={{ transform: expandedGroups['Button'] ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}
+                  >
+                    <polyline points="6 9 12 15 18 9"/>
+                  </svg>
+                </button>
+                
+                {expandedGroups['Button'] && (
+                  <div className="properties-group-content">
+                    <div className="property-row">
+                      <label className="property-label">Type</label>
+                      <select
+                        className="property-select"
+                        value={buttonAttributes.type}
+                        onChange={(e) => handleButtonChange('type', e.target.value)}
+                      >
+                        <option value="">—</option>
+                        <option value="button">button</option>
+                        <option value="submit">submit</option>
+                        <option value="reset">reset</option>
+                      </select>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Video Settings Group */}
+            {elementTag === 'video' && (
+              <div className="properties-group">
+                <button 
+                  className="properties-group-header"
+                  onClick={() => toggleGroup('Video')}
+                  type="button"
+                >
+                  <span>Video Settings</span>
+                  <svg 
+                    viewBox="0 0 24 24" 
+                    width="14" 
+                    height="14" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    strokeWidth="2"
+                    style={{ transform: expandedGroups['Video'] ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}
+                  >
+                    <polyline points="6 9 12 15 18 9"/>
+                  </svg>
+                </button>
+                
+                {expandedGroups['Video'] && (
+                  <div className="properties-group-content">
+                    <div className="property-row">
+                      <label className="property-label">Video URL</label>
+                      <input
+                        type="text"
+                        className="property-input"
+                        value={videoAttributes.src}
+                        onChange={(e) => handleVideoChange('src', e.target.value)}
+                        onKeyDown={handleKeyDown}
+                        placeholder="https://example.com/video.mp4"
+                      />
+                    </div>
+                    <div className="property-row">
+                      <label className="property-label">Poster</label>
+                      <input
+                        type="text"
+                        className="property-input"
+                        value={videoAttributes.poster}
+                        onChange={(e) => handleVideoChange('poster', e.target.value)}
+                        onKeyDown={handleKeyDown}
+                        placeholder="https://example.com/poster.jpg"
                       />
                     </div>
                   </div>

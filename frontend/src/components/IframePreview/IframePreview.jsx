@@ -1,6 +1,30 @@
 import { useRef, useEffect, useCallback, forwardRef, useImperativeHandle } from 'react';
 import { buildTree } from '../DomTree';
 
+// Extract body content from full HTML document
+const extractBodyContent = (htmlString) => {
+  if (!htmlString) return '';
+  
+  // If the HTML contains a body tag, extract its content
+  const bodyMatch = htmlString.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+  if (bodyMatch) {
+    return bodyMatch[1];
+  }
+  
+  // If no body tag, check if it has DOCTYPE, html, or head tags that need stripping
+  if (htmlString.includes('<!DOCTYPE') || htmlString.includes('<html') || htmlString.includes('<head')) {
+    // Create a temp element to parse and extract useful content
+    const temp = document.createElement('div');
+    temp.innerHTML = htmlString;
+    // Remove any stray meta, link, style, title, head elements that shouldn't be in body
+    temp.querySelectorAll('meta, link, title, head, style, script').forEach(el => el.remove());
+    return temp.innerHTML;
+  }
+  
+  // Otherwise return as-is
+  return htmlString;
+};
+
 const IframePreview = forwardRef(({ html, onElementSelect, selectedElement, onDomUpdate, onHtmlChange }, ref) => {
   const iframeRef = useRef(null);
   const iframeDocRef = useRef(null);
@@ -91,6 +115,9 @@ const IframePreview = forwardRef(({ html, onElementSelect, selectedElement, onDo
     const doc = iframeRef.current.contentDocument || iframeRef.current.contentWindow.document;
     iframeDocRef.current = doc;
     
+    // Extract only body content to prevent meta/head tags from appearing in DOM tree
+    const bodyContent = extractBodyContent(html) || '<div style="padding: 40px; min-height: 200px;"></div>';
+    
     doc.open();
     doc.write(`<!DOCTYPE html><html><head><style>
       * { box-sizing: border-box; }
@@ -105,7 +132,7 @@ const IframePreview = forwardRef(({ html, onElementSelect, selectedElement, onDo
       .drop-inside { outline: 3px dashed #10b981 !important; outline-offset: -3px; background: rgba(16, 185, 129, 0.15) !important; }
       [draggable="true"] { cursor: grab; }
       [contenteditable="true"] { cursor: text !important; outline: 2px solid #10b981 !important; user-select: text !important; -webkit-user-select: text !important; }
-    </style></head><body>${html || '<div style="padding: 40px; min-height: 200px;"></div>'}</body></html>`);
+    </style></head><body>${bodyContent}</body></html>`);
     doc.close();
 
     // Make all elements draggable
