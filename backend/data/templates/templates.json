@@ -1,0 +1,88 @@
+{
+  "templates": [
+    {
+      "id": "starter-newsletter",
+      "name": "Newsletter",
+      "category": "Marketing",
+      "preview": "📰",
+      "file": "newsletter.html"
+    },
+    {
+      "id": "starter-promo",
+      "name": "Promotion",
+      "category": "Sales",
+      "preview": "🎉",
+      "file": "promotion.html"
+    },
+    {
+      "id": "starter-welcome",
+      "name": "Welcome Email",
+      "category": "Onboarding",
+      "preview": "👋",
+      "file": "welcome.html"
+    },
+    {
+      "id": "starter-receipt",
+      "name": "Order Receipt",
+      "category": "Transactional",
+      "preview": "🧾",
+      "file": "receipt.html"
+    },
+    {
+      "id": "starter-blank",
+      "name": "Blank Canvas",
+      "category": "Basic",
+      "preview": "📄",
+      "file": "blank.html"
+    },
+    {
+      "id": "starter-event",
+      "name": "Event Invitation",
+      "category": "Events",
+      "preview": "📅",
+      "file": "event.html"
+    },
+    {
+      "id": "starter-product-launch",
+      "name": "Product Launch",
+      "category": "Marketing",
+      "preview": "🚀",
+      "file": "product-launch.html"
+    },
+    {
+      "id": "starter-flash-sale",
+      "name": "Flash Sale",
+      "category": "Sales",
+      "preview": "⚡",
+      "file": "flash-sale.html"
+    },
+    {
+      "id": "starter-social-follow",
+      "name": "Social Follow",
+      "category": "Social",
+      "preview": "📱",
+      "file": "social-follow.html"
+    },
+    {
+      "id": "starter-re-engagement",
+      "name": "Re-engagement",
+      "category": "Marketing",
+      "preview": "💔",
+      "file": "re-engagement.html"
+    },
+    {
+      "id": "starter-referral",
+      "name": "Referral Program",
+      "category": "Marketing",
+      "preview": "🎁",
+      "file": "referral.html"
+    },
+    {
+      "id": "starter-testimonial",
+      "name": "Testimonial Request",
+      "category": "Social",
+      "preview": "⭐",
+      "file": "testimonial.html"
+    }
+  ]
+}

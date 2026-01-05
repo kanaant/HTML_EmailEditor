@@ -1,0 +1,27 @@
+[
+  {
+    "category": "Personalization",
+    "options": [
+      { "label": "First Name", "value": "*|FNAME|*", "desc": "Recipient's first name" },
+      { "label": "Last Name", "value": "*|LNAME|*", "desc": "Recipient's last name" },
+      { "label": "Email Address", "value": "*|EMAIL|*", "desc": "Recipient's email address" }
+    ]
+  },
+  {
+    "category": "Required Footer Links",
+    "options": [
+      { "label": "Unsubscribe Link", "value": "*|UNSUB|*", "desc": "Link to unsubscribe (Required)" },
+      { "label": "Update Profile Link", "value": "*|UPDATE_PROFILE|*", "desc": "Link for users to update preferences" },
+      { "label": "Physical Address", "value": "*|HTML:LIST_ADDRESS_HTML|*", "desc": "Sender's physical address (Required)" },
+      { "label": "View in Browser", "value": "*|ARCHIVE|*", "desc": "Link to view email in browser" }
+    ]
+  },
+  {
+    "category": "Company & List Info",
+    "options": [
+      { "label": "Company Name", "value": "*|LIST:COMPANY|*", "desc": "Company name from list settings" },
+      { "label": "List Name", "value": "*|LIST:NAME|*", "desc": "Name of the email audience" },
+      { "label": "Current Year", "value": "*|CURRENT_YEAR|*", "desc": "Auto-updating year (for Copyrights)" }
+    ]
+  }
+]

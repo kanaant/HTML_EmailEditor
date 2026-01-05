@@ -1,0 +1,19 @@
+version: '3.8'
+name: maquifit-engagment
+
+services:
+  email-editor:
+    image: maquifit/email-editor:latest
+    container_name: email-editor
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    ports:
+      - "3045:80"
+    volumes:
+      - ../backend/data:/app/data
+    env_file:
+      - ../.env
+    environment:
+      - PORT=3001
+    restart: unless-stopped
